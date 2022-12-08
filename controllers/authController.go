@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -23,5 +24,9 @@ func Register(c *fiber.Ctx) error {
 		Email:    data["email"],
 		Password: password, // need to hash the password
 	}
+
+	// we are calling the global DB variable from connection.go
+	// then, we are creating + inserting the user we created on line 22 into DB
+	database.DB.Create(&user)
 	return c.JSON(user)
 }
