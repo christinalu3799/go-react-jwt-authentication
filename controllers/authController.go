@@ -1,6 +1,9 @@
 package controllers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/christinalu3799/go-react-jwt-authentication/models"
+	"github.com/gofiber/fiber/v2"
+)
 
 func Register(c *fiber.Ctx) error {
 	// get our data back from the post request
@@ -11,5 +14,11 @@ func Register(c *fiber.Ctx) error {
 		return err
 	}
 
+	// create the user
+	user := models.User{
+		Name: data["name"],
+		Email: data["email"],
+		Password: data["password"] // need to hash the password 
+	}
 	return c.JSON(data)
 }
