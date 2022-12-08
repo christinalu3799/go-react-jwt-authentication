@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -15,10 +16,12 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	// create the user
+	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
+	// 👆🏼 need to convert our password to a byte array
 	user := models.User{
-		Name: data["name"],
-		Email: data["email"],
-		Password: data["password"] // need to hash the password 
+		Name:     data["name"],
+		Email:    data["email"],
+		Password: password, // need to hash the password
 	}
-	return c.JSON(data)
+	return c.JSON(user)
 }
