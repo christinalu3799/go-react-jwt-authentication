@@ -30,3 +30,24 @@ func Register(c *fiber.Ctx) error {
 	database.DB.Create(&user)
 	return c.JSON(user)
 }
+
+func Login(c *fiber.Ctx) error {
+	var data map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	// want to get user associated w email
+	var user models.User
+
+	database.DB.Where("email = ?", data["email"]).First(&user)
+
+	// if we haven't found the user
+	if user.Id == 0 {
+		c.Status(fiber.StatusNotFound)
+		return c.JSON(fiber.Map{
+			"message": "user not found",
+		})
+	}
+}
