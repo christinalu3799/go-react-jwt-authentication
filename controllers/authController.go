@@ -1,11 +1,17 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	// "time"
 )
+
+const SecretKey string = "secret"
 
 func Register(c *fiber.Ctx) error {
 	// get our data back from the post request
@@ -58,4 +64,28 @@ func Login(c *fiber.Ctx) error {
 			"message": "incorrect password",
 		})
 	}
+
+	// when we get the right email and password, we want to return a JWT token
+	// creating the claims
+	// claims := &jwt.StandardClaims{
+	// 	ExpiresAt: jwt.NewTime(15000),
+	// 	Issuer:    strconv.Itoa(int(user.Id)),
+	// }
+
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+		ExpiresAt: jwt.NewTime(15000),
+		// issuer is our user, need to convert user id back to string
+		Issuer: strconv.Itoa(int(user.Id)),
+	})
+
+	token, err := claims.SignedString([]byte(SecretKey))
+
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message": "could not log in",
+		})
+	}
+
+	return c.JSON(token)
 }
