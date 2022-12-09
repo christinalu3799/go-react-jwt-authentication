@@ -50,4 +50,12 @@ func Login(c *fiber.Ctx) error {
 			"message": "user not found",
 		})
 	}
+
+	// if we found the user, then we need to compare the password
+	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "incorrect password",
+		})
+	}
 }
