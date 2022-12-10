@@ -8,7 +8,6 @@ import (
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
-	// "time"
 )
 
 const SecretKey string = "secret"
@@ -49,7 +48,7 @@ func Login(c *fiber.Ctx) error {
 
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
-	// if we haven't found the user
+	// if we haven't found the user based off email
 	if user.Id == 0 {
 		c.Status(fiber.StatusNotFound)
 		return c.JSON(fiber.Map{
@@ -67,10 +66,6 @@ func Login(c *fiber.Ctx) error {
 
 	// when we get the right email and password, we want to return a JWT token
 	// creating the claims
-	// claims := &jwt.StandardClaims{
-	// 	ExpiresAt: jwt.NewTime(15000),
-	// 	Issuer:    strconv.Itoa(int(user.Id)),
-	// }
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: jwt.NewTime(15000),
