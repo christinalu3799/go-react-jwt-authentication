@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"strconv"
-
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	"strconv"
 )
 
 const SecretKey string = "secret"
@@ -65,7 +64,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// when we get the right email and password, we want to return a JWT token
-	// creating the claims
+	// creating the claims, which are statements about an entity (typically, the user) and additional data
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: jwt.NewTime(15000),
@@ -73,6 +72,8 @@ func Login(c *fiber.Ctx) error {
 		Issuer: strconv.Itoa(int(user.Id)),
 	})
 
+	// here, we are signing our token to make sure that we are who we say we are
+	// in other words,signing our JWTs with a secret lets us know whether the content has been tampered with
 	token, err := claims.SignedString([]byte(SecretKey))
 
 	if err != nil {
