@@ -6,7 +6,7 @@ import (
 
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
-	"github.com/dgrijalva/jwt-go/v4"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -69,9 +69,9 @@ func Login(c *fiber.Ctx) error {
 	// creating the claims, which are statements about an entity (typically, the user) and additional data
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: jwt.NewTime(15000),
 		// issuer is our user, need to convert user id back to string
-		Issuer: strconv.Itoa(int(user.Id)),
+		Issuer:    strconv.Itoa(int(user.Id)),
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	})
 
 	// here, we are signing our token to make sure that we are who we say we are
@@ -99,4 +99,30 @@ func Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "success",
 	})
+}
+
+func User(c *fiber.Ctx) error {
+	// retrive the cookie from the client
+	cookie := c.Cookies("jwt")
+
+	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "unauthenticated",
+		})
+	}
+
+	// get the claims from the token
+	claims := token.Claims.(*jwt.StandardClaims)
+
+	// with the claims data, we want to retrieve the logged in user
+	var user models.User
+
+	database.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	return c.JSON(user)
 }
