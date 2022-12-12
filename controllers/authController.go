@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
-	"strconv"
 )
 
 const SecretKey string = "secret"
@@ -83,5 +85,18 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(token)
+	// store our token in cookies
+	cookie := fiber.Cookie{
+		Name:    "jwt",
+		Value:   token,
+		Expires: time.Now().Add(time.Hour * 24),
+		// store cookie on client-side
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }
