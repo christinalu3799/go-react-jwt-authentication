@@ -32,7 +32,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	// we are calling the global DB variable from connection.go
-	// then, we are creating + inserting the user we created on line 22 into DB
+	// then, we are creating + inserting the user we created into DB
 	database.DB.Create(&user)
 	return c.JSON(user)
 }
@@ -96,13 +96,11 @@ func Login(c *fiber.Ctx) error {
 
 	c.Cookie(&cookie)
 
-	return c.JSON(fiber.Map{
-		"message": "success",
-	})
+	return c.JSON(user)
 }
 
 func User(c *fiber.Ctx) error {
-	// retrive the cookie from the client
+	// retrieve the cookie from the client
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
