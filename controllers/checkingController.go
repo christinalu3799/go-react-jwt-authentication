@@ -75,3 +75,12 @@ func GetCheckingBalance(c *fiber.Ctx) error {
 	fmt.Println(checking)
 	return c.JSON(checking)
 }
+
+func DeleteCheckingBalance(c *fiber.Ctx) error {
+	var checking_id = c.Params("checking_id")
+	var checking models.Checking
+	database.DB.Where("id = ?", checking_id).Delete(&checking)
+	return c.JSON(fiber.Map{
+		"message": "successfully deleted checking data",
+	})
+}

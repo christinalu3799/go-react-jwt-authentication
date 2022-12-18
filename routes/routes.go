@@ -16,4 +16,5 @@ func Setup(app *fiber.App) {
 	app.Post("/api/logout", controllers.Logout)
 	app.Post("/api/createchecking", controllers.CreateChecking)
 	app.Get("/api/getcheckingbalance", controllers.GetCheckingBalance)
+	app.Delete("/api/deletechecking/:checking_id", controllers.DeleteCheckingBalance)
 }
