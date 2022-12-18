@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -121,7 +122,7 @@ func User(c *fiber.Ctx) error {
 	var user models.User
 
 	database.DB.Where("id = ?", claims.Issuer).First(&user)
-
+	fmt.Println(&user)
 	return c.JSON(user)
 }
 

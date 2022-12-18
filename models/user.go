@@ -1,9 +1,5 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 // Belongs to association ---
 // `Checking` belongs to `User`
 // Here, `UserID` is the foreign key in Checking
@@ -15,7 +11,7 @@ type User struct {
 }
 
 type Checking struct {
-	gorm.Model
+	Id     uint   `json:"checking_id"`
 	Number string `json:"number"`
-	UserID uint
+	UserID uint   `json:"user_id"`
 }
