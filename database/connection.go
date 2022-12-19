@@ -1,17 +1,15 @@
 package database
 
 import (
-	// "fmt"
 	"fmt"
-	"os"
-
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
-// create a GLOBAL variables (CAPS)
+// create a GLOBAL variable for our database
 var DB *gorm.DB
 
 func Connect() {
@@ -33,7 +31,6 @@ func Connect() {
 
 	DB = connection
 
-	// create users and checkings schema in our database
+	// create users and checkings tables in our database
 	connection.AutoMigrate(&models.User{}, &models.Checking{})
-	// connection.AutoMigrate(&models.User{})
 }

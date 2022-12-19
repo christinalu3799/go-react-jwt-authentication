@@ -9,12 +9,14 @@ import (
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
-const SecretKey string = "secret"
+var SECRETKEY string
 
 func Register(c *fiber.Ctx) error {
+
 	// get our data back from the post request
 	var data map[string]string // similar to an array with a string as a key and value
 
@@ -39,6 +41,10 @@ func Register(c *fiber.Ctx) error {
 }
 
 func Login(c *fiber.Ctx) error {
+
+	envMap, _ := godotenv.Read("./.env")
+	SECRETKEY = envMap["secret"]
+	fmt.Println("SECRETKEY = ", envMap["secret"])
 	var data map[string]string
 
 	if err := c.BodyParser(&data); err != nil {
@@ -77,7 +83,7 @@ func Login(c *fiber.Ctx) error {
 
 	// here, we are signing our token to make sure that we are who we say we are
 	// in other words,signing our JWTs with a secret lets us know whether the content has been tampered with
-	token, err := claims.SignedString([]byte(SecretKey))
+	token, err := claims.SignedString([]byte(SECRETKEY))
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
@@ -105,7 +111,7 @@ func User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(SECRETKEY), nil
 	})
 
 	if err != nil {

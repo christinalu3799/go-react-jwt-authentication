@@ -10,16 +10,14 @@ import (
 )
 
 func main() {
-
 	// connect to database
 	database.Connect()
 
 	app := fiber.New()
 
-	// user cors to allow frontend to make requests to backend
+	// use cors to allow client to send requests to backend
 	app.Use(cors.New(cors.Config{
-		// this allows our frontend to receive the cookie that server sends
-		// also allows the frontend to send the cookie back
+		// this allows our frontend to receive/send back the cookie to/from the server
 		AllowCredentials: true,
 	}))
 

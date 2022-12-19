@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func CreateChecking(c *fiber.Ctx) error {
+
 	// the data we are posting to the server
 	var data map[string]string
 	// error handling
@@ -20,7 +20,7 @@ func CreateChecking(c *fiber.Ctx) error {
 	// need to get user id from cookie
 	cookie := c.Cookies("jwt")
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(SECRETKEY), nil
 	})
 
 	// error handling if user is not logged in
@@ -53,7 +53,7 @@ func GetCheckingBalance(c *fiber.Ctx) error {
 	// need to get user id from cookie
 	cookie := c.Cookies("jwt")
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(SECRETKEY), nil
 	})
 
 	// error handling if user is not logged in
