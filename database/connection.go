@@ -1,7 +1,12 @@
 package database
 
 import (
+	// "fmt"
+	"fmt"
+	"os"
+
 	"github.com/christinalu3799/go-react-jwt-authentication/models"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -10,10 +15,16 @@ import (
 var DB *gorm.DB
 
 func Connect() {
+	// load all env variables into a map
+	envMap, mapErr := godotenv.Read("./.env")
+	if mapErr != nil {
+		fmt.Printf("Error loading .env file into map[sting]string\n")
+		os.Exit(1)
+	}
 	// this is where we are setting up our database connection
-	// the string passed into the .Open() method is the URL to our database
-	// connection, err := gorm.Open(mysql.Open("mysql://root:VrBzDvyTWzgNkQaXpvFx@containers-us-west-175.railway.app:5983/railway"), &gorm.Config{})
-	connection, err := gorm.Open(mysql.Open("root:03071999cl!@/go-react-jwt-authentication"), &gorm.Config{})
+	// dsn = URL string of database passed into the .Open() method
+	dsn := envMap["dbUser"] + ":" + envMap["dbPass"] + "@" + envMap["tcp"] + "/" + envMap["dbName"]
+	connection, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	// error handling
 	if err != nil {
@@ -24,4 +35,5 @@ func Connect() {
 
 	// create users and checkings schema in our database
 	connection.AutoMigrate(&models.User{}, &models.Checking{})
+	// connection.AutoMigrate(&models.User{})
 }

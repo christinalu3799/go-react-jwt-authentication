@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/christinalu3799/go-react-jwt-authentication/database"
 	"github.com/christinalu3799/go-react-jwt-authentication/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"os"
 )
 
 func main() {
+
 	// connect to database
 	database.Connect()
 
@@ -25,12 +25,11 @@ func main() {
 
 	routes.Setup(app)
 
-	fmt.Println("HOME: ", os.Getenv("HOME"))
-	shell, ok := os.LookupEnv("SHELL")
-	if !ok {
-		fmt.Println("the env var SHELL is not set")
-	} else {
-		fmt.Println("SHELL: ", shell)
+	// get port
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8000"
 	}
-	app.Listen(":8000")
+	fmt.Printf("Listening on port %s\n\n", port)
+	app.Listen(port)
 }
