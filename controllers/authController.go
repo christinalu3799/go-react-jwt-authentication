@@ -128,6 +128,7 @@ func User(c *fiber.Ctx) error {
 
 func Logout(c *fiber.Ctx) error {
 	// to logout, we need to remove the cookie that we just created in the login function
+	// here, we are encrypting a cookie values
 	cookie := fiber.Cookie{
 		Name:  "jwt",
 		Value: "",

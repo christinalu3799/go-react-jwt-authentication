@@ -12,6 +12,7 @@ var DB *gorm.DB
 func Connect() {
 	// this is where we are setting up our database connection
 	// the string passed into the .Open() method is the URL to our database
+	// connection, err := gorm.Open(mysql.Open("mysql://root:VrBzDvyTWzgNkQaXpvFx@containers-us-west-175.railway.app:5983/railway"), &gorm.Config{})
 	connection, err := gorm.Open(mysql.Open("root:03071999cl!@/go-react-jwt-authentication"), &gorm.Config{})
 
 	// error handling
