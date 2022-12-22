@@ -53,7 +53,6 @@ func Login(c *fiber.Ctx) error {
 
 	// want to get user associated w email
 	var user models.User
-
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
 	// if we haven't found the user based off email
@@ -74,7 +73,6 @@ func Login(c *fiber.Ctx) error {
 
 	// when we get the right email and password, we want to return a JWT token
 	// creating the claims, which are statements about an entity (typically, the user) and additional data
-
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		// issuer is our user, need to convert user id back to string
 		Issuer:    strconv.Itoa(int(user.Id)),
@@ -84,7 +82,6 @@ func Login(c *fiber.Ctx) error {
 	// here, we are signing our token to make sure that we are who we say we are
 	// in other words,signing our JWTs with a secret lets us know whether the content has been tampered with
 	token, err := claims.SignedString([]byte(SECRETKEY))
-
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{
@@ -100,9 +97,7 @@ func Login(c *fiber.Ctx) error {
 		// store cookie on client-side
 		HTTPOnly: true,
 	}
-
 	c.Cookie(&cookie)
-
 	return c.JSON(user)
 }
 

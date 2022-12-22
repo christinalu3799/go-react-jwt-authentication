@@ -33,11 +33,13 @@ func CreateChecking(c *fiber.Ctx) error {
 	// get the claims from the token
 	claims := token.Claims.(*jwt.StandardClaims)
 	uint8UserID, err := strconv.ParseUint(claims.Issuer, 10, 32)
+
 	// error handling for converting sting to uint
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
+
 	// create our checking schema
 	checking := models.Checking{
 		Number: data["number"],
@@ -63,6 +65,7 @@ func GetCheckingBalance(c *fiber.Ctx) error {
 			"message": "unauthenticated. please login to view checking balance.",
 		})
 	}
+
 	// get the claims from the token
 	claims := token.Claims.(*jwt.StandardClaims)
 	fmt.Println(claims)
@@ -70,7 +73,7 @@ func GetCheckingBalance(c *fiber.Ctx) error {
 
 	// initialize variable for checking balance
 	var checking models.Checking
-	// database.DB.Where("user_id = ?", claims.Issuer).Find(&checking)
+
 	database.DB.Where(map[string]interface{}{"user_id": claims.Issuer}).Find(&checking)
 	fmt.Println(checking)
 	return c.JSON(checking)
